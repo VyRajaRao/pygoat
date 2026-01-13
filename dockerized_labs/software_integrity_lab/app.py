@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, make_response, send_from_dire
 import base64
 import pickle
 import os
+import importlib.util
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -51,6 +52,30 @@ def lab2():
         # Intentionally vulnerable to XSS that can modify download link
         return render_template('lab2.html', username=username, success=True)
     return render_template('lab2.html')
+
+@app.route('/lab3')
+def lab3():
+    """
+    Lab 3: Unsigned / Unverified Plugin Loading
+    Demonstrates loading external code without integrity verification
+    """
+    plugin_path = os.path.join(
+        os.path.dirname(__file__),
+        "plugins",
+        "plugin.py"
+    )
+
+    try:
+        spec = importlib.util.spec_from_file_location("plugin", plugin_path)
+        plugin = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(plugin)
+
+        result = plugin.run()
+    except Exception as e:
+        result = f"Error loading plugin: {str(e)}"
+
+    return render_template("lab3.html", result=result)
+
 
 @app.route('/download/<path:filename>')
 def serve_file(filename):

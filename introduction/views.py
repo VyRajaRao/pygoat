@@ -10,6 +10,9 @@ import re
 import string
 import subprocess
 import uuid
+import importlib.util
+from django.http import HttpResponse
+from django.conf import settings
 from dataclasses import dataclass
 from hashlib import md5
 from io import BytesIO
@@ -1218,10 +1221,42 @@ def software_and_data_integrity_failure_lab2(request):
         except:
             return render(request,"Lab_2021/A8_software_and_data_integrity_failure/lab2.html")
 
-
 @authentication_decorator
 def software_and_data_integrity_failure_lab3(request):
-    pass
+    if request.method == "GET":
+        return HttpResponse("Lab 3 backend reached")
+
+@authentication_decorator
+@authentication_decorator
+@authentication_decorator
+def software_and_data_integrity_failure_lab3(request):
+    if request.method == "GET":
+        try:
+            plugin_path = os.path.join(
+                settings.BASE_DIR,
+                "dockerized_labs",
+                "software_integrity_lab",
+                "plugins",
+                "plugin.py"
+            )
+
+            spec = importlib.util.spec_from_file_location("plugin", plugin_path)
+            plugin = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(plugin)
+
+            result = plugin.run(request)
+            return render(
+                request,
+                "Lab_2021/A8_software_and_data_integrity_failure/lab3.html",
+                {"result": result}
+            )
+        except Exception as e:
+            return render(
+                request,
+                "Lab_2021/A8_software_and_data_integrity_failure/lab3.html",
+                {"result": str(e)}
+            )
+
 
 ## --------------------------A6_discussion-------------------------------------------------------
 
