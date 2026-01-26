@@ -1221,7 +1221,50 @@ def software_and_data_integrity_failure_lab2(request):
 
 @authentication_decorator
 def software_and_data_integrity_failure_lab3(request):
-    pass
+    if request.method == "GET":
+        return HttpResponse("Lab 3 backend reached")
+
+@authentication_decorator
+@authentication_decorator
+def software_and_data_integrity_failure_lab3(request):
+    plugin_choice = request.GET.get("plugin")
+    result = None
+
+    if request.method == "GET" and plugin_choice:
+        try:
+            if plugin_choice == "tampered":
+                plugin_file = "malicious_plugin.py"
+            elif plugin_choice == "trusted":
+                plugin_file = "trusted_plugin.py"
+            else:
+                plugin_file = None
+
+            if plugin_file:
+                plugin_path = os.path.join(
+                    settings.BASE_DIR,
+                    "dockerized_labs",
+                    "software_integrity_lab",
+                    "plugins",
+                    plugin_file
+                )
+
+                spec = importlib.util.spec_from_file_location("plugin", plugin_path)
+                plugin = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(plugin)
+
+                result = plugin.run(request)
+
+        except Exception as e:
+            result = {"error": str(e)}
+
+    return render(
+        request,
+        "Lab_2021/A8_software_and_data_integrity_failure/lab3.html",
+        {
+            "result": result,
+            "plugin_choice": plugin_choice
+        }
+    )
 
 ## --------------------------A6_discussion-------------------------------------------------------
 
