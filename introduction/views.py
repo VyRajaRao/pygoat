@@ -1223,7 +1223,6 @@ def software_and_data_integrity_failure_lab2(request):
 @authentication_decorator
 def software_and_data_integrity_failure_lab3(request):
     raw_plugin_choice = request.GET.get("plugin")
-    # Explicitly validate plugin_choice against a fixed allowlist
     if raw_plugin_choice in ("tampered", "trusted"):
         plugin_choice = raw_plugin_choice
     else:

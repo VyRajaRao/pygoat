@@ -59,8 +59,6 @@ def lab3():
     Lab 3: Unsigned / Unverified Plugin Loading
     Demonstrates loading external code without integrity verification
     """
-    # Choose which plugin to load, defaulting to a "trusted" plugin.
-    # This intentionally does not perform any integrity verification.
     plugin_param = request.args.get("plugin", "trusted_plugin.py")
     if plugin_param not in ("trusted_plugin.py", "malicious_plugin.py"):
         plugin_param = "trusted_plugin.py"
