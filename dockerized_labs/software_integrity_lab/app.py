@@ -80,21 +80,7 @@ def lab3():
     except Exception as e:
         result = f"Error loading plugin: {str(e)}"
 
-    return f"""
-    <!doctype html>
-    <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Lab 3: Unsigned / Unverified Plugin Loading</title>
-    </head>
-    <body>
-        <h1>Lab 3: Unsigned / Unverified Plugin Loading</h1>
-        <p>This lab demonstrates loading external code without integrity verification.</p>
-        <h2>Plugin result</h2>
-        <pre>{result}</pre>
-    </body>
-    </html>
-    """
+    return render_template('lab3.html', result=result)
 
 
 @app.route('/download/<path:filename>')
