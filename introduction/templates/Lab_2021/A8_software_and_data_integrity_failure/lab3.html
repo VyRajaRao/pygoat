@@ -27,16 +27,55 @@
             or modify the plugin can influence application behavior.
         </p>
 
+        <h4>Simulate Plugin Update</h4>
+
+        <p class="bp">
+            Use the buttons below to simulate how the application behaves when a
+            trusted plugin is used versus when a modified plugin is loaded.
+        </p>
+
+        <div style="
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        ">
+            <a href="?plugin=trusted" class="btn btn-info">
+                Load Trusted Plugin
+            </a>
+        
+            <a href="?plugin=tampered" class="btn btn-info">
+                Load Modified Plugin
+            </a>
+        
+            {% if result %}
+            <a href="/2021/A8/lab3" class="btn btn-info">
+                Clear Output
+            </a>
+            {% endif %}
+        </div>
+
+
+        <p class="bp">
+            <strong>Currently Selected Plugin:</strong>
+            {% if plugin_choice == "tampered" %}
+            Modified / Tampered Plugin
+            {% else %}
+            Trusted Plugin
+            {% endif %}
+        </p>
+
+
         <h4>Plugin Output</h4>
         <div class="box">
             {% if result %}
-                <ul>
-                    {% for key, value in result.items %}
-                        <li><strong>{{ key }}:</strong> {{ value }}</li>
-                    {% endfor %}
-                </ul>
+            <ul>
+                {% for key, value in result.items %}
+                <li><strong>{{ key }}:</strong> {{ value }}</li>
+                {% endfor %}
+            </ul>
             {% else %}
-                <p class="bp">No output generated.</p>
+            <p class="bp">No output generated.</p>
             {% endif %}
         </div>
 
