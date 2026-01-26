@@ -59,10 +59,14 @@ def lab3():
     Lab 3: Unsigned / Unverified Plugin Loading
     Demonstrates loading external code without integrity verification
     """
+    plugin_param = request.args.get("plugin", "trusted_plugin.py")
+    if plugin_param not in ("trusted_plugin.py", "malicious_plugin.py"):
+        plugin_param = "trusted_plugin.py"
+
     plugin_path = os.path.join(
         os.path.dirname(__file__),
         "plugins",
-        "plugin.py"
+        plugin_param
     )
 
     try:
@@ -70,11 +74,11 @@ def lab3():
         plugin = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(plugin)
 
-        result = plugin.run()
+        result = plugin.run(request)
     except Exception as e:
         result = f"Error loading plugin: {str(e)}"
 
-    return render_template("lab3.html", result=result)
+    return render_template('lab3.html', result=result)
 
 
 @app.route('/download/<path:filename>')

@@ -11,7 +11,6 @@ import string
 import subprocess
 import uuid
 import importlib.util
-from django.http import HttpResponse
 from django.conf import settings
 from dataclasses import dataclass
 from hashlib import md5
@@ -1223,23 +1222,21 @@ def software_and_data_integrity_failure_lab2(request):
 
 @authentication_decorator
 def software_and_data_integrity_failure_lab3(request):
-    if request.method == "GET":
-        return HttpResponse("Lab 3 backend reached")
+    raw_plugin_choice = request.GET.get("plugin")
+    if raw_plugin_choice in ("tampered", "trusted"):
+        plugin_choice = raw_plugin_choice
+    else:
+        plugin_choice = None
 
-@authentication_decorator
-@authentication_decorator
-def software_and_data_integrity_failure_lab3(request):
-    plugin_choice = request.GET.get("plugin")
     result = None
 
     if request.method == "GET" and plugin_choice:
         try:
-            if plugin_choice == "tampered":
-                plugin_file = "malicious_plugin.py"
-            elif plugin_choice == "trusted":
-                plugin_file = "trusted_plugin.py"
-            else:
-                plugin_file = None
+            plugin_mapping = {
+                "tampered": "malicious_plugin.py",
+                "trusted": "trusted_plugin.py",
+            }
+            plugin_file = plugin_mapping.get(plugin_choice)
 
             if plugin_file:
                 plugin_path = os.path.join(

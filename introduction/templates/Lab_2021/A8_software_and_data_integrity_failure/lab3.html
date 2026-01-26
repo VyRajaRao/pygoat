@@ -60,8 +60,10 @@
             <strong>Currently Selected Plugin:</strong>
             {% if plugin_choice == "tampered" %}
             Modified / Tampered Plugin
-            {% else %}
+            {% elif plugin_choice == "trusted" %}
             Trusted Plugin
+            {% else %}
+            None selected
             {% endif %}
         </p>
 
@@ -69,11 +71,17 @@
         <h4>Plugin Output</h4>
         <div class="box">
             {% if result %}
+            {% if result.error %}
+            <div class="alert alert-danger" role="alert">
+                <strong>Error loading plugin:</strong> {{ result.error }}
+            </div>
+            {% else %}
             <ul>
                 {% for key, value in result.items %}
                 <li><strong>{{ key }}:</strong> {{ value }}</li>
                 {% endfor %}
             </ul>
+            {% endif %}
             {% else %}
             <p class="bp">No output generated.</p>
             {% endif %}
